@@ -14,36 +14,36 @@ GNU General Public License for more details.
 
 const REACTION_MAP = {
   FIRE: {
-    unicode: "\uD83D\uDD25",
+    unicode: "https://em-content.zobj.net/source/apple/391/fire_1f525.png",
     name: "Must Take",
   },
   LOVE: {
-    unicode: "\uD83D\uDE0D",
+    unicode: "https://em-content.zobj.net/source/apple/391/smiling-face-with-heart-eyes_1f60d.png",
     name: "Love It",
   },
-  CRAP: {
-    unicode: "\uD83D\uDCA9",
-    name: "Crap Class",
+  INTERESTING: {
+    unicode: "https://em-content.zobj.net/source/apple/391/nerd-face_1f913.png",
+    name: "Interesting",
+  },
+  EASY: {
+    unicode: "https://em-content.zobj.net/source/apple/391/hundred-points_1f4af.png",
+    name: "Easy",
   },
   OKAY: {
-    unicode: "\uD83D\uDE10",
+    unicode: "https://em-content.zobj.net/source/apple/391/neutral-face_1f610.png",
     name: "It's Aight",
   },
   BORING: {
-    unicode: "\uD83D\uDE34",
+    unicode: "https://em-content.zobj.net/source/apple/391/sleeping-face_1f634.png",
     name: "Boring",
   },
   HARD: {
-    unicode: "\uD83D\uDE29",
+    unicode: "https://em-content.zobj.net/source/apple/391/weary-face_1f629.png",
     name: "Hard",
   },
-  EASY: {
-    unicode: "\uD83D\uDCAF",
-    name: "Easy",
-  },
-  INTERESTING: {
-    unicode: "\uD83E\uDD13",
-    name: "Interesting",
+  CRAP: {
+    unicode: "https://em-content.zobj.net/source/apple/391/pile-of-poo_1f4a9.png",
+    name: "Crap Class",
   },
 };
 
