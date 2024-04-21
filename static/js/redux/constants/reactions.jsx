@@ -18,7 +18,8 @@ const REACTION_MAP = {
     name: "Must Take",
   },
   LOVE: {
-    unicode: "https://em-content.zobj.net/source/apple/391/smiling-face-with-heart-eyes_1f60d.png",
+    unicode:
+      "https://em-content.zobj.net/source/apple/391/smiling-face-with-heart-eyes_1f60d.png",
     name: "Love It",
   },
   INTERESTING: {

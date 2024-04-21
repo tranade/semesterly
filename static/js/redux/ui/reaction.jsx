@@ -53,6 +53,7 @@ class Reaction extends React.Component {
   }
 
   render() {
+    const emojiStyle = { width: "30px", height: "30px" };
     return (
       <div
         className={classNames({
@@ -63,7 +64,11 @@ class Reaction extends React.Component {
         onClick={this.toggleSelected}
       >
         <div className="emoji">
-          <img src={REACTION_MAP[this.props.emoji].unicode}/>
+          <img
+            src={REACTION_MAP[this.props.emoji].unicode}
+            style={emojiStyle}
+            alt="Emojis for Reactions"
+          />
         </div>
 
         <div
@@ -102,7 +107,6 @@ Reaction.propTypes = {
     }
     return new Error(`Invalid emoji in ${componentName}`);
   },
-  total: PropTypes.number.isRequired,
   count: PropTypes.number.isRequired,
   react: PropTypes.func.isRequired,
   selected: PropTypes.bool,
