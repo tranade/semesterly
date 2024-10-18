@@ -107,7 +107,7 @@ const CourseModalBody = (props: CourseModalBodyProps) => {
     });
 
   const handleKeyPress = useCallback(
-    (e) => {
+    (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") {
         setCurrentHoveredSection((prevSection) =>
           prevSection < sectionList.length - 1 ? prevSection + 1 : prevSection

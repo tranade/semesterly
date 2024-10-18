@@ -213,7 +213,7 @@ const SideBar = () => {
 
   // Handles keypresses: "Up" decrements hoveredCourse, "Down" increments hoveredCourse (both with bounds).
   const handleKeyPress = useCallback(
-    (e) => {
+    (e: KeyboardEvent) => {
       if (e.key === "ArrowUp") {
         if (hoveredCourse > -1) {
           setHoveredCourse((prevHoveredCourse) => prevHoveredCourse - 1);
