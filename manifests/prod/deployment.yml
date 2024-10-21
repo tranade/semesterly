@@ -78,7 +78,7 @@ spec:
             - name: AUTH_TYPE
               value: plain
             - name: SERVER_TLS_SSLMODE
-              value: verify-ca
+              value: allow
             - name: MAX_CLIENT_CONN
               value: "10000"
             - name: DEFAULT_POOL_SIZE
