@@ -45,7 +45,7 @@ spec:
         - containerPort: 5432
         volumeMounts:
         - mountPath: /etc/pgbouncer/client_root_ca.crt
-          name: semesterly-az-postgres-tls-root-ca.crt
+          name: semesterly-az-postgres-tls-root-ca
           subPath: client_root_ca.crt
         resources:
           requests:
@@ -187,3 +187,8 @@ spec:
                 secretKeyRef:
                   name: semesterly-secrets
                   key: JHU_JWT_AUTH_SECRET
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: semesterly-az-postgres-tls-root-ca.crt
+        name: semesterly-az-postgres-tls-root-ca
