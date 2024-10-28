@@ -82,7 +82,7 @@ spec:
             - name: AUTH_TYPE
               value: plain
             - name: SERVER_TLS_SSLMODE
-              value: verify-ca
+              value: allow
             - name: PGBOUNCER_CLIENT_TLS_CA_FILE
               value: "/etc/pgbouncer/client_root_ca.crt"
             - name: MAX_CLIENT_CONN
