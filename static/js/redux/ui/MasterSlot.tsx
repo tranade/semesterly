@@ -204,7 +204,7 @@ const MasterSlot = (props: MasterSlotProps) => {
         {shareLink}
         {!props.hideCloseButton ? (
           <i
-            className="fa fa-times"
+            className="fa-solid fa-xmark"
             onClick={(event) => stopPropagation(props.removeCourse, event)}
           />
         ) : null}
