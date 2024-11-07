@@ -275,7 +275,7 @@ const Semesterly = () => {
                   rel="noopener noreferrer"
                   href="https://github.com/jhuopensource/semesterly"
                 >
-                  <i className="fa fa-github" />
+                  <i className="fa-brands fa-github" />
                   Follow
                 </a>
               </li>
