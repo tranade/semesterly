@@ -5,7 +5,8 @@ import REACTION_MAP from "../../constants/reactions";
 import MasterSlot from "../MasterSlot";
 import EvaluationList from "../evaluation_list";
 import CourseModalSection from "../CourseModalSection";
-import SlotHoverTip from "../slot_hover_tip";
+import SlotHoverTip from "../SlotHoverTip";
+import RadioGroup from "../RadioGroup";
 
 import { getSectionTypeDisplayName, strPropertyCmp } from "../../util";
 import {
@@ -16,12 +17,8 @@ import {
 } from "../../constants/commonTypes";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { getSchoolSpecificInfo } from "../../constants/schools";
-import { getCourseInfoId, userInfoActions } from "../../state/slices";
-import {
-  getActiveTimetable,
-  getCurrentSemester,
-  getDenormCourseById,
-} from "../../state";
+import { userInfoActions } from "../../state/slices";
+import { getActiveTimetable, getCurrentSemester } from "../../state";
 import { getSectionTypeToSections } from "../../state/slices/entitiesSlice";
 import {
   getCourseShareLink,
@@ -71,7 +68,7 @@ const CourseModalBody = (props: CourseModalBodyProps) => {
     );
   const semester = useAppSelector((state) => getCurrentSemester(state));
   const getShareLink = (courseCode: number) => getCourseShareLink(courseCode, semester);
-  const getShareLinkFromModal = (courseCode: number) =>
+  const getShareLinkFromModal = (courseCode: string) =>
     getCourseShareLinkFromModal(courseCode, semester);
   const isComparingTimetables = useAppSelector(
     (state) => state.compareTimetable.isComparing
@@ -352,41 +349,131 @@ const CourseModalBody = (props: CourseModalBodyProps) => {
             </span>
           );
         });
-  const matchedCoursesPrerequisites =
-    prerequisites === null ? null : prerequisites.match(courseRegex);
-  const newPrerequisites =
-    prerequisites === "" || prerequisites === null
-      ? "None"
-      : prerequisites.split(courseRegex).map((t, i) => {
-          if (
-            matchedCoursesPrerequisites === null ||
-            matchedCoursesPrerequisites.indexOf(t) === -1
-          ) {
-            return t;
-          }
-          if (
-            matchedCoursesPrerequisites.indexOf(t) !== -1 &&
-            Object.keys(props.course.regexed_courses).indexOf(t) !== -1
-          ) {
-            return (
-              <SlotHoverTip
-                key={t}
-                num={i}
-                code={t}
-                name={props.course.regexed_courses[t]}
-                getShareLinkFromModal={getShareLinkFromModal}
-              />
-            );
-          }
-          return (
-            <span className="textItem" key={t}>
-              {t}
-            </span>
-          );
-        });
+
+  const prereqModes = ["original", "name", "code"];
+  const [prereqMode, setPrereqMode] = useState("name");
+
+  const partsComponents = {
+    Course: (parts: string[], i: number) => (
+      <SlotHoverTip
+        key={parts[i]}
+        mode={prereqMode === "original" ? "name" : (prereqMode as "name" | "code")}
+        num={i}
+        code={parts[i]}
+        name={props.course.regexed_courses[parts[i]]}
+        getShareLinkFromModal={getShareLinkFromModal}
+      />
+    ),
+    CourseError: (parts: string[], i: number) => (
+      <span key={i} style={{ color: "#a61900" }}>
+        {parts[i]}
+      </span>
+    ),
+    AND: (i: number) => (
+      <span
+        key={i}
+        style={{
+          backgroundColor: "#33ab2e",
+          borderRadius: "3px",
+          padding: "0 4px",
+        }}
+      >
+        AND
+      </span>
+    ),
+    OR: (i: number) => (
+      <>
+        <br />
+        <span
+          key={i}
+          style={{
+            backgroundColor: "#38c0c2",
+            borderRadius: "3px",
+            padding: "0 4px",
+          }}
+        >
+          OR
+        </span>
+      </>
+    ),
+  };
+
+  const processPrereqLinear = (parts: string[]) => {
+    return parts.map((part, i) => {
+      if (courseRegex.test(part)) {
+        const Component = props.course.regexed_courses.hasOwnProperty(part)
+          ? partsComponents.Course
+          : partsComponents.CourseError;
+        return Component(parts, i);
+      }
+      return part;
+    });
+  };
+
+  const processPrereqRecursive = (
+    parts: string[],
+    start: number,
+    depth: number
+  ): [React.ReactNode, number] => {
+    const nodes = [];
+    let i = start;
+    while (i < parts.length) {
+      const part = parts[i];
+
+      // Handle course regex
+      if (courseRegex.test(part)) {
+        const Component = props.course.regexed_courses.hasOwnProperty(part)
+          ? partsComponents.Course
+          : partsComponents.CourseError;
+        nodes.push(Component(parts, i));
+        i++;
+        continue;
+      }
+
+      // Handle OR, AND, parentheses, and raw text
+      switch (part) {
+        case "OR":
+          nodes.push(partsComponents.OR(i));
+          break;
+        case "AND":
+          nodes.push(partsComponents.AND(i));
+          break;
+        case "(":
+          const [node, iNext] = processPrereqRecursive(parts, i + 1, depth + 1);
+          nodes.push(node);
+          i = iNext;
+          continue;
+        case ")":
+          return [<div style={{ marginLeft: 10 * depth }}>{nodes}</div>, i + 1];
+        default:
+          nodes.push(part); // Raw text
+      }
+      i++;
+    }
+
+    return [<div style={{ marginLeft: 10 * depth }}>{nodes}</div>, i];
+  };
+
+  const newPrerequisites = (() => {
+    if (!prerequisites) return "None";
+    const splitRegex = /(AND|OR|\(|\)|[A-Z]{2}\.[0-9]{3}\.[0-9]{3})/g;
+    const parts = prerequisites.split(splitRegex);
+    if (prereqMode === "original") {
+      return processPrereqLinear(parts);
+    } else {
+      const [node, _] = processPrereqRecursive(parts, 0, 0);
+      return node;
+    }
+  })();
+
   const prerequisitesDisplay = (
     <div className="modal-module prerequisites">
       <h3 className="modal-module-header">Prerequisites</h3>
+      <RadioGroup
+        buttons={prereqModes}
+        active={prereqMode}
+        onChange={(button) => setPrereqMode(button)}
+      />
       <p>{newPrerequisites}</p>
     </div>
   );

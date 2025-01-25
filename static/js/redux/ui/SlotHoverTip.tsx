@@ -17,6 +17,7 @@ import { useAppSelector } from "../hooks";
 import { selectSlotColorData } from "../state/slices/themeSlice";
 
 interface SlotHoverTipProps {
+  mode?: "code" | "name";
   num: number;
   code: string;
   name: string;
@@ -29,6 +30,7 @@ interface SlotHoverTipProps {
  * also displays the course name, and clicking on it will link to that course.
  */
 const SlotHoverTip = ({
+  mode = "name",
   num,
   code,
   name,
@@ -38,7 +40,7 @@ const SlotHoverTip = ({
   const maxColourIndex = colorData.length - 1;
   return (
     <a href={getShareLinkFromModal(code)} className="course-link" key={num}>
-      <span>{name}</span>
+      <span>{mode === "name" ? name : code}</span>
       <span
         className="course-link-tip"
         style={{
