@@ -6,8 +6,7 @@ interface RadioGroupProps {
   onChange: (button: string) => void;
 }
 
-const RadioGroup: React.FC<RadioGroupProps> = ({ buttons, active, onChange }) => {
-  return (
+const RadioGroup: React.FC<RadioGroupProps> = ({ buttons, active, onChange }) => (
     <div
       style={{
         width: "100%",
@@ -18,8 +17,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({ buttons, active, onChange }) =>
         overflow: "hidden",
       }}
     >
-      {buttons.map((button) => {
-        return (
+      {buttons.map((button) => (
           <div
             onClick={() => onChange(button)}
             style={{
@@ -33,10 +31,8 @@ const RadioGroup: React.FC<RadioGroupProps> = ({ buttons, active, onChange }) =>
           >
             {button[0].toUpperCase() + button.slice(1)}
           </div>
-        );
-      })}
+        ))}
     </div>
   );
-};
 
 export default RadioGroup;
