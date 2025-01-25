@@ -398,7 +398,8 @@ const CourseModalBody = (props: CourseModalBodyProps) => {
     ),
   };
 
-  const processPrereqLinear = (parts: string[]) => parts.map((part, i) => {
+  const processPrereqLinear = (parts: string[]) =>
+    parts.map((part, i) => {
       if (courseRegex.test(part)) {
         const Component = props.course.regexed_courses.hasOwnProperty(part)
           ? partsComponents.Course
