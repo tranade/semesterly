@@ -127,6 +127,8 @@
     "watch": "node misc/server.js",
     "lint": "./node_modules/.bin/eslint \"static/js/redux/**\"; ./node_modules/.bin/sass-lint -c .sass-lint.yml 'static/css/timetable/*.scss, static/css/timetable/**/*.scss' -v -q",
     "lint-fix": "./node_modules/.bin/eslint --fix \"static/js/redux/**\" ",
+    "prettier-check": "npx prettier \"**/*.{js,jsx,ts,tsx}\" --check",
+    "prettier": "npx prettier \"**/*.{js,jsx,ts,tsx}\" --write",
     "validate": "npm ls"
   },
   "repository": {
