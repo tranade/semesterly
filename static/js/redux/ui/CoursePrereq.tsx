@@ -1,13 +1,7 @@
 import React, { useState } from "react";
-import RadioGroup from "./RadioGroup";
+import PrereqRadioGroup from "./PrereqRadioGroup";
 import SlotHoverTip from "./SlotHoverTip";
-import { Course } from "../constants/commonTypes";
-
-enum PrereqModeStatus {
-  ORIGINAL = "original",
-  NAME = "name",
-  CODE = "code",
-}
+import { Course, PrereqModeStatus } from "../constants/commonTypes";
 
 interface CoursePrereqProps {
   courseRegex: RegExp;
@@ -129,13 +123,7 @@ const CoursePrereq: React.FC<CoursePrereqProps> = ({
   return (
     <div className="modal-module prerequisites">
       <h3 className="modal-module-header">Prerequisites</h3>
-      <RadioGroup
-        buttons={Object.keys(PrereqModeStatus).map(
-          (key) => (PrereqModeStatus as any)[key]
-        )}
-        active={prereqMode}
-        onChange={(button) => setPrereqMode(button as PrereqModeStatus)}
-      />
+      <PrereqRadioGroup active={prereqMode} onChange={(mode) => setPrereqMode(mode)} />
       <p>{newPrerequisites}</p>
     </div>
   );
