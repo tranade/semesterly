@@ -297,7 +297,6 @@ const CourseModalBody = (props: CourseModalBodyProps) => {
 
   const evalInfo = props.course.evals;
   const relatedCourses = props.course.related_courses;
-  const { prerequisites, regexed_courses } = props.course;
   const maxColourIndex = slotColorData.length - 1;
 
   const similarCourses =
@@ -519,8 +518,8 @@ const CourseModalBody = (props: CourseModalBodyProps) => {
           {showCapacityAttention && isMobile && attentioncapacityTracker}
           <CoursePrereq
             courseRegex={courseRegex}
-            prerequisites={prerequisites}
-            regexedCourses={regexed_courses}
+            prerequisites={props.course.prerequisites}
+            regexedCourses={props.course.regexed_courses}
             getShareLinkFromModal={getShareLinkFromModal}
           />
           {posTags}
