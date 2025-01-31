@@ -80,27 +80,26 @@ const CoursePrereq: React.FC<CoursePrereqProps> = ({
           ? partsComponents.Course
           : partsComponents.CourseError;
         nodes.push(Component(parts, i));
-        i++;
-        continue;
-      }
-
-      // Handle OR, AND, parentheses, and raw text
-      switch (part) {
-        case "OR":
-          nodes.push(partsComponents.OR(i));
-          break;
-        case "AND":
-          nodes.push(partsComponents.AND(i));
-          break;
-        case "(":
-          const [node, iNext] = processPrereqRecursive(parts, i + 1, depth + 1);
-          nodes.push(node);
-          i = iNext;
-          continue;
-        case ")":
-          return [<div style={{ marginLeft: 10 * depth }}>{nodes}</div>, i + 1];
-        default:
-          nodes.push(part); // Raw text
+      } else {
+        // Handle OR, AND, parentheses, and raw text
+        switch (part) {
+          case "OR":
+            nodes.push(partsComponents.OR(i));
+            break;
+          case "AND":
+            nodes.push(partsComponents.AND(i));
+            break;
+          case "(": {
+            const [node, iNext] = processPrereqRecursive(parts, i + 1, depth + 1);
+            nodes.push(node);
+            i = iNext - 1; // -1 for i++
+            break;
+          }
+          case ")":
+            return [<div style={{ marginLeft: 10 * depth }}>{nodes}</div>, i + 1];
+          default:
+            nodes.push(part); // Raw text
+        }
       }
       i++;
     }
@@ -123,7 +122,7 @@ const CoursePrereq: React.FC<CoursePrereqProps> = ({
   return (
     <div className="modal-module prerequisites">
       <h3 className="modal-module-header">Prerequisites</h3>
-      <PrereqRadioGroup active={prereqMode} onChange={(mode) => setPrereqMode(mode)} />
+      <PrereqRadioGroup active={prereqMode} onChange={setPrereqMode} />
       <p>{newPrerequisites}</p>
     </div>
   );
