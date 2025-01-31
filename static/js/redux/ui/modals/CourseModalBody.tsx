@@ -6,7 +6,7 @@ import MasterSlot from "../MasterSlot";
 import EvaluationList from "../evaluation_list";
 import CourseModalSection from "../CourseModalSection";
 import SlotHoverTip from "../SlotHoverTip";
-import RadioGroup from "../RadioGroup";
+import CoursePrereq from "../CoursePrereq";
 
 import { getSectionTypeDisplayName, strPropertyCmp } from "../../util";
 import {
@@ -297,7 +297,7 @@ const CourseModalBody = (props: CourseModalBodyProps) => {
 
   const evalInfo = props.course.evals;
   const relatedCourses = props.course.related_courses;
-  const { prerequisites } = props.course;
+  const { prerequisites, regexed_courses } = props.course;
   const maxColourIndex = slotColorData.length - 1;
 
   const similarCourses =
@@ -350,132 +350,6 @@ const CourseModalBody = (props: CourseModalBodyProps) => {
           );
         });
 
-  const prereqModes = ["original", "name", "code"];
-  const [prereqMode, setPrereqMode] = useState("name");
-
-  const partsComponents = {
-    Course: (parts: string[], i: number) => (
-      <SlotHoverTip
-        key={parts[i]}
-        mode={prereqMode === "original" ? "name" : (prereqMode as "name" | "code")}
-        num={i}
-        code={parts[i]}
-        name={props.course.regexed_courses[parts[i]]}
-        getShareLinkFromModal={getShareLinkFromModal}
-      />
-    ),
-    CourseError: (parts: string[], i: number) => (
-      <span key={i} style={{ color: "#a61900" }}>
-        {parts[i]}
-      </span>
-    ),
-    AND: (i: number) => (
-      <span
-        key={i}
-        style={{
-          backgroundColor: "#33ab2e",
-          borderRadius: "3px",
-          padding: "0 4px",
-        }}
-      >
-        AND
-      </span>
-    ),
-    OR: (i: number) => (
-      <>
-        <br />
-        <span
-          key={i}
-          style={{
-            backgroundColor: "#38c0c2",
-            borderRadius: "3px",
-            padding: "0 4px",
-          }}
-        >
-          OR
-        </span>
-      </>
-    ),
-  };
-
-  const processPrereqLinear = (parts: string[]) =>
-    parts.map((part, i) => {
-      if (courseRegex.test(part)) {
-        const Component = props.course.regexed_courses.hasOwnProperty(part)
-          ? partsComponents.Course
-          : partsComponents.CourseError;
-        return Component(parts, i);
-      }
-      return part;
-    });
-
-  const processPrereqRecursive = (
-    parts: string[],
-    start: number,
-    depth: number
-  ): [React.ReactNode, number] => {
-    const nodes = [];
-    let i = start;
-    while (i < parts.length) {
-      const part = parts[i];
-
-      // Handle course regex
-      if (courseRegex.test(part)) {
-        const Component = props.course.regexed_courses.hasOwnProperty(part)
-          ? partsComponents.Course
-          : partsComponents.CourseError;
-        nodes.push(Component(parts, i));
-        i++;
-        continue;
-      }
-
-      // Handle OR, AND, parentheses, and raw text
-      switch (part) {
-        case "OR":
-          nodes.push(partsComponents.OR(i));
-          break;
-        case "AND":
-          nodes.push(partsComponents.AND(i));
-          break;
-        case "(":
-          const [node, iNext] = processPrereqRecursive(parts, i + 1, depth + 1);
-          nodes.push(node);
-          i = iNext;
-          continue;
-        case ")":
-          return [<div style={{ marginLeft: 10 * depth }}>{nodes}</div>, i + 1];
-        default:
-          nodes.push(part); // Raw text
-      }
-      i++;
-    }
-
-    return [<div style={{ marginLeft: 10 * depth }}>{nodes}</div>, i];
-  };
-
-  const newPrerequisites = (() => {
-    if (!prerequisites) return "None";
-    const splitRegex = /(AND|OR|\(|\)|[A-Z]{2}\.[0-9]{3}\.[0-9]{3})/g;
-    const parts = prerequisites.split(splitRegex);
-    if (prereqMode === "original") {
-      return processPrereqLinear(parts);
-    } else {
-      const [node, _] = processPrereqRecursive(parts, 0, 0);
-      return node;
-    }
-  })();
-
-  const prerequisitesDisplay = (
-    <div className="modal-module prerequisites">
-      <h3 className="modal-module-header">Prerequisites</h3>
-      <RadioGroup
-        buttons={prereqModes}
-        active={prereqMode}
-        onChange={(button) => setPrereqMode(button)}
-      />
-      <p>{newPrerequisites}</p>
-    </div>
-  );
   const posTags =
     props.course.pos && props.course.pos.length ? (
       <div className="modal-module areas">
@@ -643,7 +517,12 @@ const CourseModalBody = (props: CourseModalBodyProps) => {
           </div>
           {!showCapacityAttention && capacityTracker}
           {showCapacityAttention && isMobile && attentioncapacityTracker}
-          {prerequisitesDisplay}
+          <CoursePrereq
+            courseRegex={courseRegex}
+            prerequisites={prerequisites}
+            regexedCourses={regexed_courses}
+            getShareLinkFromModal={getShareLinkFromModal}
+          />
           {posTags}
           {friendDisplay}
           {hasTakenDisplay}
