@@ -318,6 +318,22 @@
     p {
       margin-top: 2px;
     }
+
+    .prerequisites-error {
+      color: #a61900;
+    }
+
+    .prerequisites-and {
+      background-color: #33ab2e;
+      border-radius: 3px;
+      padding: 0 4px;
+    }
+
+    .prerequisites-or {
+      background-color: #38c0c2;
+      border-radius: 3px;
+      padding: 0 4px;
+    }    
   }
 
   .credits {

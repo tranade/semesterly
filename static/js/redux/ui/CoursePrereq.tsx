@@ -40,33 +40,19 @@ const CoursePrereq: React.FC<CoursePrereqProps> = ({
       />
     ),
     CourseError: (parts: string[], i: number) => (
-      <span key={i} style={{ color: "#a61900" }}>
+      <span key={i} className="prerequisites-error">
         {parts[i]}
       </span>
     ),
     AND: (i: number) => (
-      <span
-        key={i}
-        style={{
-          backgroundColor: "#33ab2e",
-          borderRadius: "3px",
-          padding: "0 4px",
-        }}
-      >
+      <span key={i} className="prerequisites-and">
         AND
       </span>
     ),
     OR: (i: number) => (
       <>
         <br />
-        <span
-          key={i}
-          style={{
-            backgroundColor: "#38c0c2",
-            borderRadius: "3px",
-            padding: "0 4px",
-          }}
-        >
+        <span key={i} className="prerequisites-or">
           OR
         </span>
       </>
