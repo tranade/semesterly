@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import PrereqRadioGroup from "./PrereqRadioGroup";
 import SlotHoverTip from "./SlotHoverTip";
 import { Course, PrereqModeStatus } from "../constants/commonTypes";
@@ -107,7 +107,7 @@ const CoursePrereq: React.FC<CoursePrereqProps> = ({
     return [<div style={{ marginLeft: 10 * depth }}>{nodes}</div>, i];
   };
 
-  const newPrerequisites = (() => {
+  const newPrerequisites = useMemo(() => {
     if (!prerequisites) return "None";
     const splitRegex = /(AND|OR|\(|\)|[A-Z]{2}\.[0-9]{3}\.[0-9]{3})/g;
     const parts = prerequisites.split(splitRegex);
@@ -117,7 +117,7 @@ const CoursePrereq: React.FC<CoursePrereqProps> = ({
       const [node, _] = processPrereqRecursive(parts, 0, 0);
       return node;
     }
-  })();
+  }, [prerequisites, prereqMode]);
 
   return (
     <div className="modal-module prerequisites">
