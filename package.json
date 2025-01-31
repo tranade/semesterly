@@ -7,6 +7,8 @@
     "@emotion/styled": "^11.10.4",
     "@mui/material": "^5.15.6",
     "@reduxjs/toolkit": "^1.6.2",
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
     "@twemoji/api": "^15.1.0",
     "autoprefixer": "^7.2.6",
     "babel": "^6.23.0",
@@ -142,8 +144,6 @@
   },
   "homepage": "https://github.com/rohandas/semesterly#readme",
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.16.1",
-    "@testing-library/react": "^12.1.2",
     "@types/lodash": "^4.14.178",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
