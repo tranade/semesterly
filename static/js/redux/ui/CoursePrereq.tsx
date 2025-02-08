@@ -56,7 +56,7 @@ const CoursePrereq: React.FC<CoursePrereqProps> = ({
   const processPrereqLinear = (parts: string[]) =>
     parts.map((part, i) => {
       if (courseRegex.test(part)) {
-        const Component = regexedCourses.hasOwnProperty(part)
+        const Component = Object.prototype.hasOwnProperty.call(regexedCourses, part)
           ? partsComponents.Course
           : partsComponents.CourseError;
         return Component(parts, i);
@@ -69,14 +69,14 @@ const CoursePrereq: React.FC<CoursePrereqProps> = ({
     start: number,
     depth: number
   ): [React.ReactNode, number] => {
-    const nodes = [];
+    const nodes: React.ReactNode[] = [];
     let i = start;
     while (i < parts.length) {
       const part = parts[i];
 
       // Handle course regex
       if (courseRegex.test(part)) {
-        const Component = regexedCourses.hasOwnProperty(part)
+        const Component = Object.prototype.hasOwnProperty.call(regexedCourses, part)
           ? partsComponents.Course
           : partsComponents.CourseError;
         nodes.push(Component(parts, i));
